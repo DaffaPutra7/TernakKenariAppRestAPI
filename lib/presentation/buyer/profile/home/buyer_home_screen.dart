@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pamlanjut_restapi/core/core/components/spaces.dart';
 import 'package:pamlanjut_restapi/presentation/bloc/get_all_burung_tersedia/get_all_burung_tersedia_bloc.dart';
 import 'package:pamlanjut_restapi/presentation/auth/login_screen.dart';
 
@@ -55,6 +56,41 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
             },
           ),
         ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<GetBurungTersediaBloc>().add(
+            GetAllBurungTersediaEvent(),
+          );
+        },
+        child: Column(
+          children: [
+            const SpaceHeight(10),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Daftar Burung Tersedia',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SpaceHeight(10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Cari burung...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                ),
+                onChanged: (value) {
+                  
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

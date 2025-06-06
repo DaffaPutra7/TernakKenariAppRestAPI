@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:pamlanjut_restapi/data/model/request/buyer/buyer_profile_request_model.dart';

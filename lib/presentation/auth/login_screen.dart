@@ -6,6 +6,7 @@ import 'package:pamlanjut_restapi/core/core/constants/colors.dart';
 import 'package:pamlanjut_restapi/core/core/core.dart';
 import 'package:pamlanjut_restapi/data/model/request/auth/login_request_model.dart';
 import 'package:pamlanjut_restapi/presentation/auth/bloc/login/login_bloc.dart';
+import 'package:pamlanjut_restapi/presentation/auth/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -149,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextSpan(
                         text: 'Daftar disini!',
                         style: TextStyle(color: AppColors.primary),
-                        recognizer: TapGestureRecognizer()()
+                        recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             context.push(const RegisterScreen());
                             },

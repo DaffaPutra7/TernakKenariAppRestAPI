@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pamlanjut_restapi/data/model/request/buyer/buyer_profile_request_model.dart';
 
 part 'profile_buyer_event.dart';
 part 'profile_buyer_state.dart';

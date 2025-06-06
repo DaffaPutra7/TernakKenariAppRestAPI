@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pamlanjut_restapi/core/core/components/spaces.dart';
+import 'package:pamlanjut_restapi/data/model/response/burung_semua_tersedia_model.dart';
 import 'package:pamlanjut_restapi/presentation/bloc/get_all_burung_tersedia/get_all_burung_tersedia_bloc.dart';
 import 'package:pamlanjut_restapi/presentation/auth/login_screen.dart';
 
@@ -87,6 +88,89 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                 onChanged: (value) {
                   
                 },
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: BlocBuilder<
+                  GetBurungTersediaBloc,
+                  GetBurungTersediaState
+                >(
+                  builder: (context, state) {
+                    if (state is GetBurungTersediaLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (state is GetBurungTersediaError) {
+                      return Center(
+                        child: Text('Terjadi kesalahan: ${state.message}'),
+                      );
+                    }
+                    if (state is GetBurungTersediaLoaded) {
+                      final List<DataBurungTersedia> burungList =
+                          state.burungTersedia.data;
+
+                      if (burungList.isEmpty) {
+                        return const Center(
+                          child: Text('Tidak ada burung tersedia.'),
+                        );
+                      }
+                      return GridView.builder(
+                        itemCount: burungList.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 0.8,
+                            ),
+                        itemBuilder: (context, index) {
+                          final burung = burungList[index];
+                          return GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CupertinoAlertDialog(
+                                    title: Text('Detail Burung'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('No Ring: ${burung.noRing}'),
+                                        Text('Usia: ${burung.usia}'),
+                                        Text(
+                                          'Jenis Kenari: ${burung.jenisKenari}',
+                                        ),
+                                        Text(
+                                          'Jenis Kelamin: ${burung.jenisKelamin}',
+                                        ),
+                                        Text('Harga: ${burung.harga}'),
+                                        Text(
+                                          'Deskripsi: ${burung.deskripsi.isNotEmpty ? burung.deskripsi : 'Tidak ada deskripsi'}',
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: const Text('Tutup'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }
+                    return const SizedBox();
+                  },
+                ),
               ),
             ),
           ],

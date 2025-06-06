@@ -1,6 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pamlanjut_restapi/core/core/components/components.dart';
 import 'package:pamlanjut_restapi/core/core/constants/colors.dart';
+import 'package:pamlanjut_restapi/core/core/core.dart';
+import 'package:pamlanjut_restapi/data/model/request/auth/login_request_model.dart';
+import 'package:pamlanjut_restapi/presentation/auth/bloc/login/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -80,6 +85,76 @@ class _LoginScreenState extends State<LoginScreen> {
                       isShowPassword ? Icons.visibility : Icons.visibility_off,
                       color: AppColors.grey,
                     ),
+                  ),
+                ),
+                const SpaceHeight(30),
+                BlocConsumer<LoginBloc, LoginState>(
+                  listener: (context, state) {
+                    if (state is LoginFailure) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.error)));
+                    } else if (state is LoginSuccess) {
+                      final role = state.responseModel.user?.role
+                          ?.toLowerCase();
+                      if (role == 'admin') {
+                        context.pushAndRemoveUntil(
+                          const AdminConfirmScreen(),
+                          (route) => false);
+                      } else if (role == 'buyer') {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.responseModel.message!)),
+                        );
+                        context.pushAndRemoveUntil(
+                          const BuyerProfilScreen(),
+                          (route) => false,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Role tidak dikenali')),
+                        );
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    return Button.filled(
+                      onPressed:
+                          state is LoginLoading
+                              ? null
+                              : () {
+                                if (_key.currentState!.validate()) {
+                                  final request = LoginRequestModel(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
+                                  context.read<LoginBloc>().add(
+                                    LoginRequested(requestModel: request),
+                                  );
+                                }
+                              },
+                      label: state is LoginLoading ? 'Memuat...' : 'Masuk',
+                    );
+                  },
+                ),
+
+                const SpaceHeight(20),
+                Text.rich(
+                  TextSpan(
+                    text: 'Belum memiliki akun? Silahkan ',
+                    style: TextStyle(
+                      color: AppColors.grey,
+                      fontSize: MediaQuery.of(context).size.width * 0.03,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'Daftar disini!',
+                        style: TextStyle(color: AppColors.primary),
+                        recognizer: TapGestureRecognizer()()
+                          ..onTap = () {
+                            context.push(const RegisterScreen());
+                            },
+                      ),
+                    ],
                   ),
                 ),
               ],

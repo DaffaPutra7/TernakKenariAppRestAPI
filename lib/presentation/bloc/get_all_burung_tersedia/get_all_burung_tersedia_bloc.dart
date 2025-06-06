@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pamlanjut_restapi/data/model/response/burung_semua_tersedia_model.dart';
 
 part 'get_all_burung_tersedia_event.dart';
 part 'get_all_burung_tersedia_state.dart';

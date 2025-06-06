@@ -31,4 +31,23 @@ class ProfileBuyerRepository {
       return Left("An error occured while adding profile: $e");
     }
   }
+
+  Future<Either<String, BuyerProfileResponseModel>> getProfileBuyer() async {
+    try {
+      final response = await _serviceHttpClient.get(
+        "buyer/profile",
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        final profileResponse = BuyerProfileResponseModel.fromJson(jsonResponse);
+        print("Profile Response: $profileResponse");
+        return Right(profileResponse);
+      } else {
+        final errorMessage = json.decode(response.body);
+        return Left(errorMessage['message'] ?? "Unknown error occured");
+      }
+    } catch (e) {
+      return Left("An error occured while fetching profile: $e");
+    }
+  }
 }

@@ -31,4 +31,23 @@ class IndukRepository {
       return Left("An error occured while adding induk: $e");
     }
   }
+
+   Future<Either<String, GetAllIndukModel>> getAllInduk() async {
+    try {
+      final response = await _serviceHttpClient.get(
+        "admin/induk",
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        final profileResponse = GetAllIndukModel.fromJson(jsonResponse);
+        return Right(profileResponse);
+      } else {
+        final errorMessage = json.decode(response.body);
+        return Left(errorMessage['message'] ?? 'Unknown error occured');
+      }
+    } catch (e) {
+      return Left("An error occured while getting all induk: $e");
+    }
+  }
 }
